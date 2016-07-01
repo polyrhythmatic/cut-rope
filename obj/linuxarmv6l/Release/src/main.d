@@ -490,7 +490,17 @@ obj/linuxarmv6l/Release/src/main.o: \
  ../../../addons/ofxOMXPlayer/src/OMXPlayerAudio.h \
  ../../../addons/ofxOMXPlayer/src/PCMRemap.h \
  ../../../addons/ofxOMXPlayer/src/OMXAudio.h \
- ../../../addons/ofxOMXPlayer/src/OMXAudioCodecOMX.h
+ ../../../addons/ofxOMXPlayer/src/OMXAudioCodecOMX.h \
+ /home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/ofxGPIO.h \
+ /home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/gpio.h \
+ /home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/i2cBus.h \
+ /home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/spi.h \
+ /home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/SPI2.h \
+ /home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/rpiPWM1.h \
+ /home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/font.h \
+ /home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/ReadRawData.h \
+ /home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/GETGoogleImage.h \
+ /home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/LED.h
 
 ../../../libs/openFrameworks/ofMain.h:
 
@@ -1529,3 +1539,23 @@ obj/linuxarmv6l/Release/src/main.o: \
 ../../../addons/ofxOMXPlayer/src/OMXAudio.h:
 
 ../../../addons/ofxOMXPlayer/src/OMXAudioCodecOMX.h:
+
+/home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/ofxGPIO.h:
+
+/home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/gpio.h:
+
+/home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/i2cBus.h:
+
+/home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/spi.h:
+
+/home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/SPI2.h:
+
+/home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/rpiPWM1.h:
+
+/home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/font.h:
+
+/home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/ReadRawData.h:
+
+/home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/GETGoogleImage.h:
+
+/home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/LED.h:

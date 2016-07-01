@@ -15,26 +15,11 @@ void ofApp::setup()
     gpio22.export_gpio();
     gpio22.setdir_gpio("in");
     ropeNum = -1;
-    
+    hasChopped = false;
+
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	
-	string videoPath = ofToDataPath("../../../video/Timecoded_Big_bunny_1.mov", true);
-//
-	//Somewhat like ofFboSettings we may have a lot of options so this is the current model
-	ofxOMXPlayerSettings settings;
-	settings.videoPath = videoPath;
-	settings.useHDMIForAudio = true;	//default true
-	settings.enableTexture = false;		//default t`rue
-	settings.enableLooping = false;		//default true
-	
-	
-	//so either pass in the settings
-//    omxPlayer.setup(settings);
-	
-	//or live with the defaults
-//	omxPlayer.loadMovie("./data/video/orb.mp4");
-    secondVidTriggered = false;
-	
+//	string videoPath = ofToDataPath("../../../video/Timecoded_Big_bunny_1.mov", true);
 }
 
 
@@ -42,8 +27,14 @@ void ofApp::setup()
 //--------------------------------------------------------------
 void ofApp::update()
 {
-    update_gpio();
-		
+    ropeNum = update_gpio();
+    
+    if(ropeNum > 0 && !hasChopped){
+        hasChopped = true;
+        ofxOMXPlayerSettings settings;
+        settings = createSettings("../../../video/Timecoded_Big_bunny_1.mov");
+        introVideo.setup(settings);
+    }
 }
 
 
@@ -58,23 +49,24 @@ void ofApp::draw(){
    
 }
 
-void ofApp::update_gpio(){
+int ofApp::update_gpio(){
     gpio17.getval_gpio(state_button_17);
     gpio27.getval_gpio(state_button_27);
     gpio22.getval_gpio(state_button_22);
     
-    ropeNum = -1;
     if(state_button_17 == "1"){
-        ropeNum = 1;
+        return 1;
     } else if(state_button_27 == "1"){
-        ropeNum = 2;
+        return 2;
     } else if(state_button_22 == "1"){
-        ropeNum = 3;
+        return 3;
+    } else {
+        return -1;
     }
 }
 
-void onButtonPress(int button){
-    
+void ofApp::resetChop(){
+    hasChopped = false;
 }
 
 bool ofApp::isPlaying(ofxOMXPlayer & player){

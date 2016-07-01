@@ -13,6 +13,8 @@ class ofApp : public ofBaseApp{
 		void draw();
     
         bool isPlaying(ofxOMXPlayer & player);
+        int update_gpio();
+        void resetChop();
     
         ofxOMXPlayerSettings createSettings(string dataPath);
     
@@ -31,5 +33,6 @@ class ofApp : public ofBaseApp{
         string state_button_27;
         string state_button_22;
         int ropeNum;
+        bool hasChopped;
 };
 
