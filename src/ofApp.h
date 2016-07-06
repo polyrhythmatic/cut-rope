@@ -35,32 +35,26 @@ class ofApp : public ofBaseApp{
     
         void startGame(string userID);
         void resetGame();
+        int stage;
     
         ofxOMXPlayerSettings createSettings(string dataPath);
     
         ofxOMXPlayer * currentVideo;
-        bool gameRunning;
-        bool drawStuff;
+    
         string drawString;
+        float startTime;
 
         string UID;
         ofxJSONElement response;
-    
-        ofxOMXPlayer omxPlayer;
+
 		ofxOMXPlayer introVideo;
         ofxOMXPlayer choiceOneVideo;
         ofxOMXPlayer choiceTwoVideo;
         ofxOMXPlayer choiceThreeVideo;
     
-        float startTime;
-    
         GPIO gpio17;
         GPIO gpio27;
         GPIO gpio22;
-        string state_button_17;
-        string state_button_27;
-        string state_button_22;
         int ropeNum;
-        bool hasChopped;
 };
 

@@ -1,28 +1,34 @@
 #include "ofApp.h"
 
+/*
+ stage zero is before the card is swiped
+ stage one is after the card is swiped - welcome screen and other info
+ stage two is playing the intro video
+ stage three is telling the user they have to make a decision
+ stage four is playing the video that shows your selection
+ stage five is the exit screen
+ */
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofBackgroundHex(0x000000);
-    gameRunning = false;
+    stage = 0;
+    startTime = ofGetElapsedTimef();
+    
     gpio17.setup("17");
     gpio17.export_gpio();
     gpio17.setdir_gpio("in");
-    
     gpio27.setup("27");
     gpio27.export_gpio();
     gpio27.setdir_gpio("in");
-
     gpio22.setup("22");
     gpio22.export_gpio();
     gpio22.setdir_gpio("in");
     ropeNum = -1;
-    hasChopped = false;
 
 	ofSetLogLevel(OF_LOG_VERBOSE);
     
     currentVideo = & introVideo;
     font.loadFont("arial.ttf", 32);
-    drawStuff = false;
     drawString = "";
 }
 
@@ -30,16 +36,21 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    if(currentVideo == & introVideo && !hasChopped && !isPlaying(*currentVideo) && !gameRunning){
-        gameRunning = true;
+    if(stage == 1 && ofGetElapsedTimef() > 5.0){
+        stage = 2;
+        currentVideo = & introVideo;
+//        playVideo(introVideo, "../../../video/Timecoded_Big_bunny_1.mov");
+        playVideo(introVideo, "INTRO2.mov");
     }
-    
-    if(gameRunning && !hasChopped){
+    if(stage == 2 && !isPlaying(*currentVideo)){
+        currentVideo->close();
+        stage = 3;
+    }
+    if(stage == 3){
         ropeNum = update_gpio();
     }
-    
-    if(ropeNum > 0 && !hasChopped && gameRunning){
-        hasChopped = true;
+    if(ropeNum > 0 && stage == 3){
+        stage = 4;
         string videoPath = "";
         if(ropeNum == 1){
             currentVideo = & choiceOneVideo;
@@ -58,12 +69,37 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    if(drawStuff){
+    if(stage == 0){
+        font.drawString("swipe your card to begin", 500, 500);
+    }
+    if(stage == 1){
+        float elapsed = ofGetElapsedTimef() - startTime;
         font.drawString(drawString, 100, 100);
+        font.drawString(ofToString(elapsed), 100, 200);
+    }
+    if(stage == 3){
+        font.drawString("chop the rope now", 100, 100);
     }
 }
 
+void ofApp::startGame(string userID){
+    stage = 1;
+//    startTime = ofGetElapsedTimef();
+    drawString = userID;
+}
+
+void ofApp::resetGame(){
+    stage = 0;
+    ropeNum = -1;
+    currentVideo->close();
+    ofResetElapsedTimeCounter();
+}
+
+
 int ofApp::update_gpio(){
+    string state_button_17;
+    string state_button_27;
+    string state_button_22;
     gpio17.getval_gpio(state_button_17);
     gpio27.getval_gpio(state_button_27);
     gpio22.getval_gpio(state_button_22);
@@ -90,24 +126,9 @@ bool ofApp::isPlaying(ofxOMXPlayer & player){
 void ofApp::playVideo(ofxOMXPlayer & player, string path){
     ofxOMXPlayerSettings settings;
     settings = createSettings("video/" + path);
+//    settings = createSettings(path);
     player.setup(settings);
-}
-
-void ofApp::startGame(string userID){
-    drawStuff = true;
-    drawString = userID;
-    currentVideo = & introVideo;
-    playVideo(introVideo, "INTRO.mp4");
-}
-
-void ofApp::resetGame(){
-    hasChopped = false;
-    gameRunning = false;
-    ropeNum = -1;
-    introVideo.close();
-    choiceOneVideo.close();
-    choiceTwoVideo.close();
-    choiceThreeVideo.close();
+    startTime = ofGetElapsedTimef();
 }
 
 ofxOMXPlayerSettings ofApp::createSettings(string dataPath){
