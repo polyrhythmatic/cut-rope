@@ -500,7 +500,10 @@ obj/linuxarmv6l/Release/src/ofApp.o: \
  /home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/font.h \
  /home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/ReadRawData.h \
  /home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/GETGoogleImage.h \
- /home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/LED.h
+ /home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/LED.h \
+ /home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/ofxJSON.h \
+ /home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/jsoncpp/include/json/json.h \
+ /home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/ofxJSONElement.h
 
 /home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/ofApp.h:
 
@@ -1559,3 +1562,9 @@ obj/linuxarmv6l/Release/src/ofApp.o: \
 /home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/GETGoogleImage.h:
 
 /home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/LED.h:
+
+/home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/ofxJSON.h:
+
+/home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/jsoncpp/include/json/json.h:
+
+/home/pi/openFrameworks/addons/ofxOMXPlayer/cut-rope-prod-glue/src/ofxJSONElement.h:

@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxOMXPlayer.h"
 #include "ofxGPIO.h"
+#include "ofxJSON.h"
 
 class ofApp : public ofBaseApp{
 
@@ -11,12 +12,39 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+        void exit();
+        
+        void keyPressed (int key);
+        void keyReleased(int key);
+        void mouseMoved(int x, int y );
+        void mouseDragged(int x, int y, int button);
+        void mousePressed(int x, int y, int button);
+        void mouseReleased(int x, int y, int button);
+        void mouseEntered(int x, int y);
+        void mouseExited(int x, int y);
+        void windowResized(int w, int h);
+        void dragEvent(ofDragInfo dragInfo);
+        void gotMessage(ofMessage msg);
     
+        void playVideo(ofxOMXPlayer & player, string path);
+
         bool isPlaying(ofxOMXPlayer & player);
         int update_gpio();
-        void resetChop();
+    
+        ofTrueTypeFont font;
+    
+        void startGame(string userID);
+        void resetGame();
     
         ofxOMXPlayerSettings createSettings(string dataPath);
+    
+        ofxOMXPlayer * currentVideo;
+        bool gameRunning;
+        bool drawStuff;
+        string drawString;
+
+        string UID;
+        ofxJSONElement response;
     
         ofxOMXPlayer omxPlayer;
 		ofxOMXPlayer introVideo;
