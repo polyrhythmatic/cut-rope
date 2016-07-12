@@ -27,8 +27,11 @@ class ofApp : public ofBaseApp{
         void gotMessage(ofMessage msg);
     
         void playVideo(ofxOMXPlayer & player, string path);
+        void getQScores(string userID);
+        void sendScores();
 
         bool isPlaying(ofxOMXPlayer & player);
+        void setupGPIO();
         int update_gpio();
     
         ofTrueTypeFont font;
@@ -51,10 +54,26 @@ class ofApp : public ofBaseApp{
         ofxOMXPlayer choiceOneVideo;
         ofxOMXPlayer choiceTwoVideo;
         ofxOMXPlayer choiceThreeVideo;
+        ofxOMXPlayer choiceFourVideo;
     
         GPIO gpio17;
         GPIO gpio27;
         GPIO gpio22;
         int ropeNum;
+        float stageThreeStartTime;
+        float endTime;
+    
+        ofImage scoreScreen;
+    
+        float score;
+    
+    
+        float qScore1;
+        float qScore2;
+        float qScore3;
+        float qScore4;
+        float qScore5;
+        float cryForHelp;
+        string surveyChoice[5] = {"boots", "rope", "chewing gum", "coca cola", "coffee"};
 };
 
