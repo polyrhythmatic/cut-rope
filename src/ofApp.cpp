@@ -74,9 +74,10 @@ void ofApp::update(){
         stage = 5;
         endTime = ofGetElapsedTimef();
         score = score * ofRandom(1.0);
-        ofLog() << score;
+        sendScores(currentUID);
     } else if(stage == 5 && ofGetElapsedTimef() - endTime > 10){
         resetGame();
+        UID = "";
     }
 }
 
@@ -92,6 +93,7 @@ void ofApp::draw(){
         float elapsed = ofGetElapsedTimef() - startTime;
         font.drawString(drawString, 100, 100);
         font.drawString(ofToString(elapsed), 100, 200);
+        font.drawString("your score on the last game was" + ofToString(cryForHelp), 200, 600);
     } else if(stage == 3){
         font.drawString("chop the rope now", 100, 100);
     } else if(stage == 5){
@@ -103,7 +105,7 @@ void ofApp::draw(){
             font.drawString("Bad move. You've lost both your SurveyChoiceAns(3) and SurveyChoiceAns(2)", 200, 500);
         }
         font.drawString("this is the end and we submit the score", 100, 700);
-        font.drawString(ofToString(score), 100, 800);
+        font.drawString(ofToString(floor(score)), 100, 800);
     }
 }
 
@@ -180,23 +182,38 @@ ofxOMXPlayerSettings ofApp::createSettings(string dataPath){
 }
 
 void ofApp::getQScores(string userID){
+    ofxJSONElement response;
     string url = "https://cp.intellifest.com/api/mh1uo7i0zwnopqfr9awo7j1ihmukrzfrnuzop4ylpgvw8kt9fcikr1am3c45z5mie3o233zub22tvs4i/project/comicconsd2016/getticketmiscfield?&uid=" + userID + "&miscfieldid[]=59&miscfieldid[]=61&miscfieldid[]=63&miscfieldid[]=65&miscfieldid[]=67&miscfieldid[]=77&miscfieldid[]=79&miscfieldid[]=81";
+    cout << url << endl;
     if (!response.open(url))
     {
         ofLogNotice("ofApp::keyPressed") << "Failed to parse JSON";
         // this is where we prompt the user to scan again?
     }
     cout << ofToInt(response["cry_for_help"].asString()) << endl;
-//    qScore1 = response["Q1"].asInt();
-//    qScore2 = response["Q2"].asInt();
-//    qScore3 = response["Q3"].asInt();
-//    qScore4 = response["Q4"].asInt();
-//    qScore5 = response["Q5"].asInt();
-//    cryForHelp = response["cry_for_help"].asInt();
+    qScore1 = ofToInt(response["Q1"].asString());
+    qScore2 = ofToInt(response["Q2"].asString());
+    qScore3 = ofToInt(response["Q3"].asString());
+    qScore4 = ofToInt(response["Q4"].asString());
+    qScore5 = ofToInt(response["Q5"].asString());
+    cryForHelp = ofToInt(response["cry_for_help"].asString());
+    cout << response << endl;
 }
 
-void ofApp::sendScores(){
-    
+void ofApp::sendScores(string userID){
+    //adds to the final score
+    ofxJSONElement response;
+    string scoreString = ofToString(floor(score));
+    cout << scoreString << endl;
+    string url = "https://cp.intellifest.com/api/mh1uo7i0zwnopqfr9awo7j1ihmukrzfrnuzop4ylpgvw8kt9fcikr1am3c45z5mie3o233zub22tvs4i/project/comicconsd2016/setticketmiscfield?&uid=" + userID + "&miscfieldid=81&value=+" + scoreString;
+    cout << url << endl;
+    if (!response.open(url))
+    {
+        ofLogNotice("ofApp::keyPressed") << "Failed to parse JSON";
+        // this is where we prompt the user to scan again?
+    }
+    ofLog() << "score submitted";
+    ofLog() << response;
 }
 
 //--------------------------------------------------------------
@@ -216,6 +233,7 @@ void ofApp::keyPressed(int key) {
         getQScores(UID);
         startGame(UID);
         
+        currentUID = UID;
         UID = "";
     } else {
         UID += key;

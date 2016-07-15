@@ -28,7 +28,7 @@ class ofApp : public ofBaseApp{
     
         void playVideo(ofxOMXPlayer & player, string path);
         void getQScores(string userID);
-        void sendScores();
+        void sendScores(string userID);
 
         bool isPlaying(ofxOMXPlayer & player);
         void setupGPIO();
@@ -48,7 +48,7 @@ class ofApp : public ofBaseApp{
         float startTime;
 
         string UID;
-        ofxJSONElement response;
+        string currentUID;
 
 		ofxOMXPlayer introVideo;
         ofxOMXPlayer choiceOneVideo;
@@ -74,6 +74,9 @@ class ofApp : public ofBaseApp{
         float qScore4;
         float qScore5;
         float cryForHelp;
-        string surveyChoice[5] = {"boots", "rope", "chewing gum", "coca cola", "coffee"};
+        string surveyOneChoice[5] = {"father", "sister", "best friend", "spouse", "mother"};
+        string surveyTwoChoice[5] = {"length of rope", "toolkit", "first aid kit", "machete", "arrows"};
+        string surveyThreeChoice[5] = {"medicine kit", "electronic gear", "outdoor gear", "extra clothing", "family photos"};
+        string surveyFourChoice[5] = {"chainsaw", "shotgun", "butcher's knife", "axe", "handgun"};
 };
 
