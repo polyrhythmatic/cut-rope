@@ -22,20 +22,21 @@ void ofApp::setup(){
     ofSetLogLevel(OF_LOG_VERBOSE);
     
     currentVideo = & introVideo;
-    font.loadFont("arial.ttf", 32);
-    drawString = "";
+    font.loadFont("HelveticaNeue.ttf", 82);
     
-    scoreScreen.load("images/score_screen.png");
+    scoreScreen.load("images/score_screen.jpg");
+    introScreen.load("images/intro_screen.jpg");
 }
 
 
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    update_gpio();
     if(stage == 1 && ofGetElapsedTimef() > 5.0){
         stage = 2;
         currentVideo = & introVideo;
-        playVideo(introVideo, "INTRO2.mov");
+        playVideo(introVideo, "INTRO.mov");
     }
     if(stage == 2 && !isPlaying(*currentVideo)){
         currentVideo->close();
@@ -50,21 +51,21 @@ void ofApp::update(){
         string videoPath = "";
         if(ropeNum == 1){
             currentVideo = & choiceOneVideo;
-            videoPath = "CHOSE1.mp4";
+            videoPath = "CHOSE1.mov";
             score = 500.0;
         } else if(ropeNum == 2){
             currentVideo = & choiceTwoVideo;
-            videoPath = "CHOSE2.mp4";
+            videoPath = "CHOSE2.mov";
             score = 500.0;
         } else if(ropeNum == 3){
             currentVideo = & choiceThreeVideo;
-            videoPath = "CHOSE3.mp4";
+            videoPath = "CHOSE3.mov";
             score = -500.0;
         }
         playVideo(*currentVideo, videoPath);
     } else if(stage == 3 && ofGetElapsedTimef() - stageThreeStartTime > 10.0){ //else if 10 seconds has elapsed
         currentVideo = & choiceFourVideo;
-        string videoPath = "orb.mp4";
+        string videoPath = "CHOSE4.mov";
         score = 2000.0;
         playVideo(*currentVideo, videoPath);
         stage = 4;
@@ -84,34 +85,40 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    if(stage == 1 || stage == 5){
-        scoreScreen.draw(0, 0);
-    }
     if(stage == 0){
-        font.drawString("swipe your card to begin", 500, 500);
+        introScreen.draw(0, 0);
     } else if(stage == 1){
-        float elapsed = ofGetElapsedTimef() - startTime;
-        font.drawString(drawString, 100, 100);
-        font.drawString(ofToString(elapsed), 100, 200);
-        font.drawString("your score on the last game was" + ofToString(cryForHelp), 200, 600);
-    } else if(stage == 3){
-        font.drawString("chop the rope now", 100, 100);
-    } else if(stage == 5){
-        if(score > 100.0){
-            font.drawString("Good choice. You've gained a SurveyChoiceAns(3) and two SurveyChoiceAns(2)!", 200, 500);
-        } else if(score > 0.0){
-            font.drawString("Not bad. You've gained a SurveyChoiceAns(3), but lost 50% of your SurveyChoiceAns(2)", 200, 500);
-        } else if(score <= 0.0){
-            font.drawString("Bad move. You've lost both your SurveyChoiceAns(3) and SurveyChoiceAns(2)", 200, 500);
+        scoreScreen.draw(0, 0);
+        if(cryForHelp > 500){
+            font.drawString("You picked up", 500, 700);
+            font.drawString("an extra " + surveyFourChoice[qScore4 - 1], 500, 800);
+        } else if(cryForHelp < 500){
+            font.drawString("Your " + surveyFourChoice[qScore4 - 1], 500, 700);
+            font.drawString("is damaged!", 500, 800);
         }
-        font.drawString("this is the end and we submit the score", 100, 700);
-        font.drawString(ofToString(floor(score)), 100, 800);
+    } else if(stage == 3){
+        font.drawString("chop the rope", 500, 500);
+    } else if(stage == 5){
+        scoreScreen.draw(0, 0);
+        if(score > 100.0){
+            font.drawString("Good choice.", 200, 500);
+            font.drawString("You've gained a " + surveyThreeChoice[qScore3 - 1], 200, 600);
+            font.drawString("and two " + surveyTwoChoice[qScore2 - 1], 200, 700);
+
+        } else if(score > 0.0){
+            font.drawString("Not bad.", 200, 500);
+            font.drawString("You've gained a " + surveyThreeChoice[qScore3 - 1] + ",", 200, 600);
+            font.drawString("but lost 50% of your " + surveyTwoChoice[qScore2 - 1], 200, 700);
+        } else if(score <= 0.0){
+            font.drawString("Bad move.", 200, 500);
+            font.drawString("You've lost both your " + surveyThreeChoice[qScore3 - 1], 200, 600);
+            font.drawString("and SurveyChoiceAns(2)" + surveyTwoChoice[qScore2 - 1], 200, 700);
+        }
     }
 }
 
 void ofApp::startGame(string userID){
     stage = 1;
-    drawString = userID;
     startTime = 0.0;
 }
 
@@ -133,15 +140,25 @@ void ofApp::setupGPIO(){
     gpio22.setup("22");
     gpio22.export_gpio();
     gpio22.setdir_gpio("in");
+    gpio26.setup("26");
+    gpio26.export_gpio();
+    gpio26.setdir_gpio("in");
 }
 
 int ofApp::update_gpio(){
     string state_button_17;
     string state_button_27;
     string state_button_22;
+    string state_button_26;
     gpio17.getval_gpio(state_button_17);
     gpio27.getval_gpio(state_button_27);
     gpio22.getval_gpio(state_button_22);
+    gpio26.getval_gpio(state_button_26);
+    
+    if(state_button_26 == "1"){
+        ofLog() << "shutdown";
+        ofSystem("sudo shutdown -h now");
+    }
     
     if(state_button_17 == "1"){
         return 1;
@@ -196,6 +213,21 @@ void ofApp::getQScores(string userID){
     qScore3 = ofToInt(response["Q3"].asString());
     qScore4 = ofToInt(response["Q4"].asString());
     qScore5 = ofToInt(response["Q5"].asString());
+    if(qScore1 == 0){
+        qScore1 = 1;
+    }
+    if(qScore2 == 0){
+        qScore2 = 1;
+    }
+    if(qScore3 == 0){
+        qScore3 = 1;
+    }
+    if(qScore4 == 0){
+        qScore4 = 1;
+    }
+    if(qScore5 == 0){
+        qScore5 = 1;
+    }
     cryForHelp = ofToInt(response["cry_for_help"].asString());
     cout << response << endl;
 }

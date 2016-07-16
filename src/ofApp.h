@@ -43,8 +43,7 @@ class ofApp : public ofBaseApp{
         ofxOMXPlayerSettings createSettings(string dataPath);
     
         ofxOMXPlayer * currentVideo;
-    
-        string drawString;
+
         float startTime;
 
         string UID;
@@ -59,21 +58,23 @@ class ofApp : public ofBaseApp{
         GPIO gpio17;
         GPIO gpio27;
         GPIO gpio22;
+        GPIO gpio26;
         int ropeNum;
         float stageThreeStartTime;
         float endTime;
     
         ofImage scoreScreen;
+        ofImage introScreen;
     
         float score;
     
     
-        float qScore1;
-        float qScore2;
-        float qScore3;
-        float qScore4;
-        float qScore5;
-        float cryForHelp;
+        int qScore1;
+        int qScore2;
+        int qScore3;
+        int qScore4;
+        int qScore5;
+        int cryForHelp;
         string surveyOneChoice[5] = {"father", "sister", "best friend", "spouse", "mother"};
         string surveyTwoChoice[5] = {"length of rope", "toolkit", "first aid kit", "machete", "arrows"};
         string surveyThreeChoice[5] = {"medicine kit", "electronic gear", "outdoor gear", "extra clothing", "family photos"};
