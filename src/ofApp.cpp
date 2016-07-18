@@ -26,6 +26,10 @@ void ofApp::setup(){
     
     scoreScreen.load("images/score_screen.jpg");
     introScreen.load("images/intro_screen.jpg");
+    cryForHelp = 0;
+    cryForHelp1 = 0;
+    cryForHelp2 = 0;
+    cryForHelp3 = 0;
 }
 
 
@@ -36,12 +40,15 @@ void ofApp::update(){
     if(stage == 1 && ofGetElapsedTimef() > 5.0){
         stage = 2;
         currentVideo = & introVideo;
-        playVideo(introVideo, "INTRO.mov");
+        playVideo(introVideo, "INTRO.mp4");
     }
-    if(stage == 2 && !isPlaying(*currentVideo)){
-        currentVideo->close();
+    if(stage == 2 && ofGetElapsedTimef() - startTime > 25.0){ //if the intro video is past 30 seconds long then they can make a decision
         stage = 3;
         stageThreeStartTime = ofGetElapsedTimef();
+    }
+    if(stage == 3 && !isPlaying(*currentVideo)){
+        //close the video when it stops
+        currentVideo->close();
     }
     if(stage == 3){
         ropeNum = update_gpio();
@@ -49,32 +56,28 @@ void ofApp::update(){
     if(stage == 3 && ropeNum > 0){ //ropenum is greater than 0 if a button has been triggered
         stage = 4;
         string videoPath = "";
+        currentVideo->close();
         if(ropeNum == 1){
             currentVideo = & choiceOneVideo;
-            videoPath = "CHOSE1.mov";
-            score = 500.0;
+            videoPath = "CHOSE1.mp4";
+            score = -250.0;
         } else if(ropeNum == 2){
             currentVideo = & choiceTwoVideo;
-            videoPath = "CHOSE2.mov";
-            score = 500.0;
+            videoPath = "CHOSE2.mp4";
+            score = -500.0;
         } else if(ropeNum == 3){
             currentVideo = & choiceThreeVideo;
-            videoPath = "CHOSE3.mov";
-            score = -500.0;
+            videoPath = "CHOSE3.mp4";
+            score = -750.0;
         }
         playVideo(*currentVideo, videoPath);
-    } else if(stage == 3 && ofGetElapsedTimef() - stageThreeStartTime > 10.0){ //else if 10 seconds has elapsed
-        currentVideo = & choiceFourVideo;
-        string videoPath = "CHOSE4.mov";
-        score = 2000.0;
-        playVideo(*currentVideo, videoPath);
-        stage = 4;
+    } else if(stage == 3 && ofGetElapsedTimef() - stageThreeStartTime > 15.0){ //else if 10 seconds has elapsed
+        resetGame();
     } else if(stage == 4 && !isPlaying(*currentVideo)){
         cout << "changing stage" << endl;
         currentVideo->close();
         stage = 5;
         endTime = ofGetElapsedTimef();
-        score = score * ofRandom(1.0);
         sendScores(currentUID);
     } else if(stage == 5 && ofGetElapsedTimef() - endTime > 10){
         resetGame();
@@ -89,30 +92,34 @@ void ofApp::draw(){
         introScreen.draw(0, 0);
     } else if(stage == 1){
         scoreScreen.draw(0, 0);
-        if(cryForHelp > 500){
-            font.drawString("You picked up", 500, 700);
-            font.drawString("an extra " + surveyFourChoice[qScore4 - 1], 500, 800);
-        } else if(cryForHelp < 500){
-            font.drawString("Your " + surveyFourChoice[qScore4 - 1], 500, 700);
-            font.drawString("is damaged!", 500, 800);
+        font.drawString("Game 1:", 200, 600);
+        if(cryForHelp1 == -500){
+            font.drawString("You've lost 10% of your supplies", 250, 700);
+        } else if(cryForHelp1 == 1000){
+            font.drawString("You've gained 20% more supplies.", 250, 700);
         }
+        font.drawString("Game 2:", 200, 850);
+        if(cryForHelp2 == -500){
+            font.drawString("You've lost 10% more supplies.", 250, 950);
+        } else if(cryForHelp2 == 250){
+            font.drawString("You've gained 5% more supplies.", 250, 950);
+        }
+//        font.drawString("Game 3:", 200, 800);
+//        if(cryForHelp3 == -500){
+//            font.drawString("You’ve lost 10% more supplies.", 250, 900);
+//        } else if(cryForHelp3 == 500){
+//            font.drawString("You’ve gained 10% more supplies.", 250, 900);
+//        }
     } else if(stage == 3){
-        font.drawString("chop the rope", 500, 500);
+//        font.drawString("chop the rope", 500, 500);
     } else if(stage == 5){
         scoreScreen.draw(0, 0);
-        if(score > 100.0){
-            font.drawString("Good choice.", 200, 500);
-            font.drawString("You've gained a " + surveyThreeChoice[qScore3 - 1], 200, 600);
-            font.drawString("and two " + surveyTwoChoice[qScore2 - 1], 200, 700);
-
-        } else if(score > 0.0){
-            font.drawString("Not bad.", 200, 500);
-            font.drawString("You've gained a " + surveyThreeChoice[qScore3 - 1] + ",", 200, 600);
-            font.drawString("but lost 50% of your " + surveyTwoChoice[qScore2 - 1], 200, 700);
-        } else if(score <= 0.0){
-            font.drawString("Bad move.", 200, 500);
-            font.drawString("You've lost both your " + surveyThreeChoice[qScore3 - 1], 200, 600);
-            font.drawString("and SurveyChoiceAns(2)" + surveyTwoChoice[qScore2 - 1], 200, 700);
+        if(score == -250.0){
+            font.drawString("You've lost 10% of your supplies", 200, 500);
+        } else if(score == -500.0){
+            font.drawString("You've lost 10% of your supplies.", 200, 500);
+        } else if(score == -750.0){
+            font.drawString("You've lost 20% of your supplies.", 200, 500);
         }
     }
 }
@@ -159,7 +166,7 @@ int ofApp::update_gpio(){
         ofLog() << "shutdown";
         ofSystem("sudo shutdown -h now");
     }
-    
+
     if(state_button_17 == "1"){
         return 1;
     } else if(state_button_27 == "1"){
@@ -200,7 +207,7 @@ ofxOMXPlayerSettings ofApp::createSettings(string dataPath){
 
 void ofApp::getQScores(string userID){
     ofxJSONElement response;
-    string url = "https://cp.intellifest.com/api/mh1uo7i0zwnopqfr9awo7j1ihmukrzfrnuzop4ylpgvw8kt9fcikr1am3c45z5mie3o233zub22tvs4i/project/comicconsd2016/getticketmiscfield?&uid=" + userID + "&miscfieldid[]=59&miscfieldid[]=61&miscfieldid[]=63&miscfieldid[]=65&miscfieldid[]=67&miscfieldid[]=77&miscfieldid[]=79&miscfieldid[]=81";
+    string url = "https://cp.intellifest.com/api/mh1uo7i0zwnopqfr9awo7j1ihmukrzfrnuzop4ylpgvw8kt9fcikr1am3c45z5mie3o233zub22tvs4i/project/comicconsd2016/getticketmiscfield?&uid=" + userID + "&miscfieldid[]=83&miscfieldid[]=85&miscfieldid[]=87&miscfieldid[]=77&miscfieldid[]=79&miscfieldid[]=81";
     cout << url << endl;
     if (!response.open(url))
     {
@@ -208,26 +215,10 @@ void ofApp::getQScores(string userID){
         // this is where we prompt the user to scan again?
     }
     cout << ofToInt(response["cry_for_help"].asString()) << endl;
-    qScore1 = ofToInt(response["Q1"].asString());
-    qScore2 = ofToInt(response["Q2"].asString());
-    qScore3 = ofToInt(response["Q3"].asString());
-    qScore4 = ofToInt(response["Q4"].asString());
-    qScore5 = ofToInt(response["Q5"].asString());
-    if(qScore1 == 0){
-        qScore1 = 1;
-    }
-    if(qScore2 == 0){
-        qScore2 = 1;
-    }
-    if(qScore3 == 0){
-        qScore3 = 1;
-    }
-    if(qScore4 == 0){
-        qScore4 = 1;
-    }
-    if(qScore5 == 0){
-        qScore5 = 1;
-    }
+    cryForHelp1 = ofToInt(response["cry_for_help_1"].asString());
+    cryForHelp2 = ofToInt(response["cry_for_help_2"].asString());
+//    cryForHelp3 = ofToInt(response["cry_for_help_3"].asString());
+
     cryForHelp = ofToInt(response["cry_for_help"].asString());
     cout << response << endl;
 }
@@ -288,6 +279,7 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
+    std::exit(1);
 }
 
 //--------------------------------------------------------------

@@ -53,7 +53,6 @@ class ofApp : public ofBaseApp{
         ofxOMXPlayer choiceOneVideo;
         ofxOMXPlayer choiceTwoVideo;
         ofxOMXPlayer choiceThreeVideo;
-        ofxOMXPlayer choiceFourVideo;
     
         GPIO gpio17;
         GPIO gpio27;
@@ -68,16 +67,9 @@ class ofApp : public ofBaseApp{
     
         float score;
     
-    
-        int qScore1;
-        int qScore2;
-        int qScore3;
-        int qScore4;
-        int qScore5;
         int cryForHelp;
-        string surveyOneChoice[5] = {"father", "sister", "best friend", "spouse", "mother"};
-        string surveyTwoChoice[5] = {"length of rope", "toolkit", "first aid kit", "machete", "arrows"};
-        string surveyThreeChoice[5] = {"medicine kit", "electronic gear", "outdoor gear", "extra clothing", "family photos"};
-        string surveyFourChoice[5] = {"chainsaw", "shotgun", "butcher's knife", "axe", "handgun"};
+        int cryForHelp1;
+        int cryForHelp2;
+        int cryForHelp3;
 };
 
