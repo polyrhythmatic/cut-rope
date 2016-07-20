@@ -24,8 +24,9 @@ void ofApp::setup(){
     currentVideo = & introVideo;
     font.loadFont("HelveticaNeue.ttf", 82);
     
-    scoreScreen.load("images/score_screen.jpg");
+    scoreScreen.load("images/score_screen.png");
     introScreen.load("images/intro_screen.jpg");
+    endScoreScreen.load("images/end_score_screen.png");
     cryForHelp = 0;
     cryForHelp1 = 0;
     cryForHelp2 = 0;
@@ -113,7 +114,7 @@ void ofApp::draw(){
     } else if(stage == 3){
 //        font.drawString("chop the rope", 500, 500);
     } else if(stage == 5){
-        scoreScreen.draw(0, 0);
+        endScoreScreen.draw(0, 0);
         if(score == -250.0){
             font.drawString("You've lost 10% of your supplies", 200, 500);
         } else if(score == -500.0){
@@ -198,7 +199,7 @@ ofxOMXPlayerSettings ofApp::createSettings(string dataPath){
     string videoPath = ofToDataPath(dataPath, true);
     ofxOMXPlayerSettings settings;
     settings.videoPath = videoPath;
-    settings.useHDMIForAudio = true;	//default true
+    settings.useHDMIForAudio = false;	//default true
     settings.enableTexture = false;		//default true
     settings.enableLooping = false;		//default true
     return settings;

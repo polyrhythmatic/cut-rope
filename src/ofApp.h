@@ -64,6 +64,7 @@ class ofApp : public ofBaseApp{
     
         ofImage scoreScreen;
         ofImage introScreen;
+        ofImage endScoreScreen;
     
         float score;
     
