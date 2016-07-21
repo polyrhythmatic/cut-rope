@@ -208,7 +208,7 @@ ofxOMXPlayerSettings ofApp::createSettings(string dataPath){
 
 void ofApp::getQScores(string userID){
     ofxJSONElement response;
-    string url = "https://cp.intellifest.com/api/mh1uo7i0zwnopqfr9awo7j1ihmukrzfrnuzop4ylpgvw8kt9fcikr1am3c45z5mie3o233zub22tvs4i/project/comicconsd2016/getticketmiscfield?&uid=" + userID + "&miscfieldid[]=83&miscfieldid[]=85&miscfieldid[]=87&miscfieldid[]=77&miscfieldid[]=79&miscfieldid[]=81";
+    string url = "http://10.102.10.202/api/mh1uo7i0zwnopqfr9awo7j1ihmukrzfrnuzop4ylpgvw8kt9fcikr1am3c45z5mie3o233zub22tvs4i/project/ftwd2016/getticketmiscfield?&uid=" + userID + "&miscfieldid[]=83&miscfieldid[]=85&miscfieldid[]=87&miscfieldid[]=77&miscfieldid[]=79&miscfieldid[]=81";
     cout << url << endl;
     if (!response.open(url))
     {
@@ -229,7 +229,7 @@ void ofApp::sendScores(string userID){
     ofxJSONElement response;
     string scoreString = ofToString(floor(score));
     cout << scoreString << endl;
-    string url = "https://cp.intellifest.com/api/mh1uo7i0zwnopqfr9awo7j1ihmukrzfrnuzop4ylpgvw8kt9fcikr1am3c45z5mie3o233zub22tvs4i/project/comicconsd2016/setticketmiscfield?&uid=" + userID + "&miscfieldid=81&value=+" + scoreString;
+    string url = "http://10.102.10.202/api/mh1uo7i0zwnopqfr9awo7j1ihmukrzfrnuzop4ylpgvw8kt9fcikr1am3c45z5mie3o233zub22tvs4i/project/ftwd2016/setticketmiscfield?&uid=" + userID + "&miscfieldid=81&value=+" + scoreString;
     cout << url << endl;
     if (!response.open(url))
     {
